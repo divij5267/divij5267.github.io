@@ -87,7 +87,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>About</h2>
-        <p>Intellectually curious, hyperfocused workaholic who picks up things only when he enjoys them, whether it's work or in life. I thrive on challenges that capture my interest and dive deep into areas that spark my passion.</p>
+        <p>Intellectually curious, hyperfocused - workaholic who picks up things only when he enjoys them, whether it's work or in life.</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -692,16 +692,18 @@
       const sentMessage = form.querySelector('.sent-message');
       const submitBtn = form.querySelector('button[type="submit"]');
       
-      // Get form data
-      const name = form.name.value;
-      const email = form.email.value;
-      const subject = form.subject.value;
-      const message = form.message.value;
+      // Get form data using querySelector for reliability
+      const name = form.querySelector('#name-field').value.trim();
+      const email = form.querySelector('#email-field').value.trim();
+      const subject = form.querySelector('#subject-field').value.trim();
+      const message = form.querySelector('#message-field').value.trim();
       
-      // Create mailto link
-      const mailtoLink = `mailto:divij.yanduru@duke.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-        `Hi Divij,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\nBest regards,\n${name}`
-      )}`;
+      // Validate form data
+      if (!name || !email || !subject || !message) {
+        errorMessage.textContent = 'Please fill in all fields.';
+        errorMessage.style.display = 'block';
+        return;
+      }
       
       // Hide all messages
       loading.style.display = 'none';
@@ -713,18 +715,50 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Opening Email...';
       
-      // Open email client
-      window.location.href = mailtoLink;
+      // Create email body
+      const emailBody = `Hi Divij,
+
+I hope this email finds you well.
+
+Name: ${name}
+Email: ${email}
+
+Subject: ${subject}
+
+Message:
+${message}
+
+Best regards,
+${name}`;
       
-      // Show success message
-      setTimeout(() => {
+      // Create mailto link with proper encoding
+      const mailtoLink = `mailto:divij.yanduru@duke.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // For debugging - log the link (remove this in production)
+      console.log('Mailto link:', mailtoLink);
+      
+      // Try to open email client
+      try {
+        window.location.href = mailtoLink;
+        
+        // Show success message
+        setTimeout(() => {
+          loading.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          sentMessage.innerHTML = `<strong>Email client opened!</strong><br>Your default email application should now be open with a pre-filled email containing:<br>• Subject: ${subject}<br>• Your message and contact details<br><br>Please send the email from your email application.`;
+          sentMessage.style.display = 'block';
+          form.reset();
+        }, 1500);
+        
+      } catch (error) {
+        // Fallback if mailto doesn't work
         loading.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Message';
-        sentMessage.innerHTML = 'Your email client has been opened with the message pre-filled. Please send the email from your email application.';
-        sentMessage.style.display = 'block';
-        form.reset();
-      }, 1500);
+        errorMessage.innerHTML = `Unable to open email client automatically. <br><br><strong>Please copy this information and email me directly at:</strong><br><a href="mailto:divij.yanduru@duke.edu">divij.yanduru@duke.edu</a><br><br><strong>Subject:</strong> ${subject}<br><strong>Your contact:</strong> ${name} (${email})<br><strong>Message:</strong> ${message}`;
+        errorMessage.style.display = 'block';
+      }
     });
   </script>
 
