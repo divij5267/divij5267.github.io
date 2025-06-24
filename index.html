@@ -30,6 +30,72 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <!-- Custom CSS for Testimonial Links -->
+  <style>
+    .testimonial-name-link {
+      color: inherit;
+      text-decoration: none;
+      position: relative;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .testimonial-name-link:hover {
+      color: #0077b5;
+      transform: translateY(-1px);
+    }
+    
+    .testimonial-name-link::after {
+      content: '🔗';
+      opacity: 0;
+      margin-left: 8px;
+      font-size: 0.8em;
+      transition: opacity 0.3s ease;
+    }
+    
+    .testimonial-name-link:hover::after {
+      opacity: 0.7;
+    }
+    
+    .testimonial-name-link::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #0077b5, #00a0dc);
+      transition: width 0.3s ease;
+    }
+    
+    .testimonial-name-link:hover::before {
+      width: 100%;
+    }
+    
+    /* LinkedIn icon hint */
+    .testimonial-item h3 {
+      position: relative;
+    }
+    
+    .testimonial-item h3::after {
+      content: '💼';
+      position: absolute;
+      right: -25px;
+      top: 0;
+      opacity: 0.3;
+      font-size: 0.7em;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    
+    .testimonial-name-link:hover + * + * {
+      color: #666;
+    }
+  </style>
   
 </head>
 
@@ -437,7 +503,7 @@
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="assets/img/testimonials/dr-sarah-glova.jpg" class="testimonial-img" alt="">
-                <h3><a href="https://www.linkedin.com/in/sglova/" target="_blank" style="color: inherit; text-decoration: none;">Dr. Sarah Glova</a></h3>
+                <h3><a href="https://www.linkedin.com/in/sglova/" target="_blank" class="testimonial-name-link">Dr. Sarah Glova</a></h3>
                 <h4>Professor, Duke University</h4>
               </div>
             </div><!-- End testimonial item -->
@@ -450,7 +516,7 @@
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="assets/img/testimonials/victoria-shiroma-wilson.jpg" class="testimonial-img" alt="">
-                <h3><a href="https://www.linkedin.com/in/victoriashiromawilson/" target="_blank" style="color: inherit; text-decoration: none;">Victoria Shiroma Wilson, EdD, PCC</a></h3>
+                <h3><a href="https://www.linkedin.com/in/victoriashiromawilson/" target="_blank" class="testimonial-name-link">Victoria Shiroma Wilson, EdD, PCC</a></h3>
                 <h4>Executive Coach, Duke University</h4>
               </div>
             </div><!-- End testimonial item -->
