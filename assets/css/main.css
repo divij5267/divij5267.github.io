@@ -621,6 +621,29 @@ section,
 /*--------------------------------------------------------------
 # About Section
 --------------------------------------------------------------*/
+.about {
+  padding: 40px 0 !important;
+}
+
+.about .section-title {
+  margin-bottom: 20px;
+}
+
+.about .content-title {
+  color: var(--heading-color);
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.about .content-subtitle {
+  font-size: 18px;
+  color: var(--accent-color);
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
 .about .content h2 {
   font-weight: 700;
   font-size: 24px;
@@ -632,7 +655,7 @@ section,
 }
 
 .about .content ul li {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
 }
@@ -685,11 +708,15 @@ section,
 # Skills Section
 --------------------------------------------------------------*/
 .skills {
-  padding: 60px 0;
+  padding: 40px 0 !important;
+}
+
+.skills .section-title {
+  margin-bottom: 15px;
 }
 
 .skills .skills-content {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .skills .progress {
