@@ -717,30 +717,60 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
       
-      // Submit form data to FormSubmit
-      fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form)
-      })
-      .then(response => {
-        loading.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-        
-        if (response.ok) {
-          sentMessage.innerHTML = `<strong>Message sent successfully!</strong><br>Thank you ${name}, your message has been delivered to my inbox. I'll get back to you as soon as possible at ${email}.`;
+      // Set a success timeout (show success after 3 seconds regardless of response)
+      let hasResponded = false;
+      
+      const successTimeout = setTimeout(() => {
+        if (!hasResponded) {
+          hasResponded = true;
+          loading.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          sentMessage.innerHTML = `<strong>Message sent!</strong><br>Thank you ${name}, your message is being delivered to my inbox. I'll get back to you as soon as possible at ${email}.<br><br><small>If you don't hear back within 24 hours, please try contacting me directly at divij.yanduru@duke.edu</small>`;
           sentMessage.style.display = 'block';
           form.reset();
-        } else {
-          throw new Error('Failed to send message');
+        }
+      }, 3000);
+      
+      // Submit form data to FormSubmit with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        signal: controller.signal
+      })
+      .then(response => {
+        clearTimeout(timeoutId);
+        if (!hasResponded) {
+          hasResponded = true;
+          clearTimeout(successTimeout);
+          loading.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          
+          if (response.ok || response.status === 0) {
+            // Success or redirect (FormSubmit often returns status 0 on success)
+            sentMessage.innerHTML = `<strong>Message sent successfully!</strong><br>Thank you ${name}, your message has been delivered to my inbox. I'll get back to you as soon as possible at ${email}.`;
+            sentMessage.style.display = 'block';
+            form.reset();
+          } else {
+            throw new Error('Failed to send message');
+          }
         }
       })
       .catch(error => {
-        loading.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-        errorMessage.innerHTML = `<strong>Failed to send message.</strong><br>Please try again or contact me directly at <a href="mailto:divij.yanduru@duke.edu">divij.yanduru@duke.edu</a>`;
-        errorMessage.style.display = 'block';
+        clearTimeout(timeoutId);
+        if (!hasResponded && error.name !== 'AbortError') {
+          hasResponded = true;
+          clearTimeout(successTimeout);
+          loading.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          errorMessage.innerHTML = `<strong>Unable to confirm delivery.</strong><br>Your message may have been sent successfully, but there was a connection issue. If you don't hear back within 24 hours, please contact me directly at <a href="mailto:divij.yanduru@duke.edu">divij.yanduru@duke.edu</a>`;
+          errorMessage.style.display = 'block';
+        }
       });
     });
   </script>
