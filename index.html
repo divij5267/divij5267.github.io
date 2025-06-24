@@ -616,7 +616,8 @@
           </div>
 
           <div class="col-lg-7">
-            <form action="https://formspree.io/divij.yanduru@duke.edu" method="post" class="contact-form" data-aos="fade-up" data-aos-delay="200" id="contactForm">
+            <form class="contact-form" data-aos="fade-up" data-aos-delay="200" id="contactForm">
+
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -679,7 +680,7 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-
+  
   <!-- Contact Form JS -->
   <script>
     document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -691,48 +692,39 @@
       const sentMessage = form.querySelector('.sent-message');
       const submitBtn = form.querySelector('button[type="submit"]');
       
+      // Get form data
+      const name = form.name.value;
+      const email = form.email.value;
+      const subject = form.subject.value;
+      const message = form.message.value;
+      
+      // Create mailto link
+      const mailtoLink = `mailto:divij.yanduru@duke.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+        `Hi Divij,\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\nBest regards,\n${name}`
+      )}`;
+      
       // Hide all messages
       loading.style.display = 'none';
       errorMessage.style.display = 'none';
       sentMessage.style.display = 'none';
       
-      // Show loading
+      // Show loading briefly
       loading.style.display = 'block';
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
+      submitBtn.textContent = 'Opening Email...';
       
-      // Submit form
-      fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: {
-          'Accept': 'application/json'
-        }
-      }).then(response => {
+      // Open email client
+      window.location.href = mailtoLink;
+      
+      // Show success message
+      setTimeout(() => {
         loading.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Message';
-        
-        if (response.ok) {
-          sentMessage.style.display = 'block';
-          form.reset();
-        } else {
-          response.json().then(data => {
-            if (Object.hasOwnProperty.call(data, 'errors')) {
-              errorMessage.textContent = data.errors.map(error => error.message).join(', ');
-            } else {
-              errorMessage.textContent = 'Oops! There was a problem submitting your form';
-            }
-            errorMessage.style.display = 'block';
-          });
-        }
-      }).catch(error => {
-        loading.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-        errorMessage.textContent = 'Oops! There was a problem submitting your form';
-        errorMessage.style.display = 'block';
-      });
+        sentMessage.innerHTML = 'Your email client has been opened with the message pre-filled. Please send the email from your email application.';
+        sentMessage.style.display = 'block';
+        form.reset();
+      }, 1500);
     });
   </script>
 
