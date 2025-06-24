@@ -616,7 +616,12 @@
           </div>
 
           <div class="col-lg-7">
-            <form class="contact-form" data-aos="fade-up" data-aos-delay="200" id="contactForm">
+            <form action="https://formsubmit.co/divij.yanduru@duke.edu" method="POST" class="contact-form" data-aos="fade-up" data-aos-delay="200" id="contactForm">
+              <!-- FormSubmit Configuration -->
+              <input type="hidden" name="_subject" value="New Contact Form Submission from Portfolio Website">
+              <input type="hidden" name="_next" value="https://divij5267.github.io/#contact">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="text" name="_honey" style="display:none">
 
               <div class="row gy-4">
 
@@ -692,7 +697,7 @@
       const sentMessage = form.querySelector('.sent-message');
       const submitBtn = form.querySelector('button[type="submit"]');
       
-      // Get form data using querySelector for reliability
+      // Get form data
       const name = form.querySelector('#name-field').value.trim();
       const email = form.querySelector('#email-field').value.trim();
       const subject = form.querySelector('#subject-field').value.trim();
@@ -710,55 +715,36 @@
       errorMessage.style.display = 'none';
       sentMessage.style.display = 'none';
       
-      // Show loading briefly
+      // Show loading
       loading.style.display = 'block';
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Opening Email...';
+      submitBtn.textContent = 'Sending...';
       
-      // Create email body
-      const emailBody = `Hi Divij,
-
-I hope this email finds you well.
-
-Name: ${name}
-Email: ${email}
-
-Subject: ${subject}
-
-Message:
-${message}
-
-Best regards,
-${name}`;
-      
-      // Create mailto link with proper encoding
-      const mailtoLink = `mailto:divij.yanduru@duke.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-      
-      // For debugging - log the link (remove this in production)
-      console.log('Mailto link:', mailtoLink);
-      
-      // Try to open email client
-      try {
-        window.location.href = mailtoLink;
-        
-        // Show success message
-        setTimeout(() => {
-          loading.style.display = 'none';
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
-          sentMessage.innerHTML = `<strong>Email client opened!</strong><br>Your default email application should now be open with a pre-filled email containing:<br>• Subject: ${subject}<br>• Your message and contact details<br><br>Please send the email from your email application.`;
-          sentMessage.style.display = 'block';
-          form.reset();
-        }, 1500);
-        
-      } catch (error) {
-        // Fallback if mailto doesn't work
+      // Submit form data to FormSubmit
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form)
+      })
+      .then(response => {
         loading.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Message';
-        errorMessage.innerHTML = `Unable to open email client automatically. <br><br><strong>Please copy this information and email me directly at:</strong><br><a href="mailto:divij.yanduru@duke.edu">divij.yanduru@duke.edu</a><br><br><strong>Subject:</strong> ${subject}<br><strong>Your contact:</strong> ${name} (${email})<br><strong>Message:</strong> ${message}`;
+        
+        if (response.ok) {
+          sentMessage.innerHTML = `<strong>Message sent successfully!</strong><br>Thank you ${name}, your message has been delivered to my inbox. I'll get back to you as soon as possible at ${email}.`;
+          sentMessage.style.display = 'block';
+          form.reset();
+        } else {
+          throw new Error('Failed to send message');
+        }
+      })
+      .catch(error => {
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        errorMessage.innerHTML = `<strong>Failed to send message.</strong><br>Please try again or contact me directly at <a href="mailto:divij.yanduru@duke.edu">divij.yanduru@duke.edu</a>`;
         errorMessage.style.display = 'block';
-      }
+      });
     });
   </script>
 
