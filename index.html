@@ -577,7 +577,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <p>I'd love to hear from you! Whether you have questions about quantitative finance, want to discuss potential collaborations, or just want to connect - feel free to reach out. I'll get back to you as soon as possible.</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -616,7 +616,7 @@
           </div>
 
           <div class="col-lg-7">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+            <form action="https://formspree.io/divij.yanduru@duke.edu" method="post" class="contact-form" data-aos="fade-up" data-aos-delay="200" id="contactForm">
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -640,9 +640,9 @@
                 </div>
 
                 <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                  <div class="loading" style="display: none;">Sending...</div>
+                  <div class="error-message" style="display: none;"></div>
+                  <div class="sent-message" style="display: none;">Your message has been sent successfully. Thank you!</div>
 
                   <button type="submit">Send Message</button>
                 </div>
@@ -679,6 +679,62 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Contact Form JS -->
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const form = this;
+      const loading = form.querySelector('.loading');
+      const errorMessage = form.querySelector('.error-message');
+      const sentMessage = form.querySelector('.sent-message');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      // Hide all messages
+      loading.style.display = 'none';
+      errorMessage.style.display = 'none';
+      sentMessage.style.display = 'none';
+      
+      // Show loading
+      loading.style.display = 'block';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      
+      // Submit form
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        
+        if (response.ok) {
+          sentMessage.style.display = 'block';
+          form.reset();
+        } else {
+          response.json().then(data => {
+            if (Object.hasOwnProperty.call(data, 'errors')) {
+              errorMessage.textContent = data.errors.map(error => error.message).join(', ');
+            } else {
+              errorMessage.textContent = 'Oops! There was a problem submitting your form';
+            }
+            errorMessage.style.display = 'block';
+          });
+        }
+      }).catch(error => {
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        errorMessage.textContent = 'Oops! There was a problem submitting your form';
+        errorMessage.style.display = 'block';
+      });
+    });
+  </script>
 
 </body>
 
