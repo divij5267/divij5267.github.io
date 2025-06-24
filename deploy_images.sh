@@ -3,12 +3,12 @@
 echo "🚀 Deploying testimonial images..."
 
 # Check if images exist
-if [ -f "assets/img/testimonials/dr-sarah-glova.jpg" ] && [ -f "assets/img/testimonials/victoria-shiroma-wilson.jpg" ]; then
+if [ -f "assets/img/testimonials/dr-sarah-glova.jpeg" ] && [ -f "assets/img/testimonials/victoria-shiroma-wilson.jpeg" ]; then
     echo "✅ Images found, deploying..."
     
     # Add images to git
-    git add assets/img/testimonials/dr-sarah-glova.jpg
-    git add assets/img/testimonials/victoria-shiroma-wilson.jpg
+    git add assets/img/testimonials/dr-sarah-glova.jpeg
+    git add assets/img/testimonials/victoria-shiroma-wilson.jpeg
     
     # Commit changes
     git commit -m "Update testimonial profile pictures with actual LinkedIn photos
@@ -25,6 +25,6 @@ if [ -f "assets/img/testimonials/dr-sarah-glova.jpg" ] && [ -f "assets/img/testi
     
 else
     echo "❌ Please make sure both image files are in the correct location:"
-    echo "   - assets/img/testimonials/dr-sarah-glova.jpg"
-    echo "   - assets/img/testimonials/victoria-shiroma-wilson.jpg"
+    echo "   - assets/img/testimonials/dr-sarah-glova.jpeg"
+    echo "   - assets/img/testimonials/victoria-shiroma-wilson.jpeg"
 fi 
